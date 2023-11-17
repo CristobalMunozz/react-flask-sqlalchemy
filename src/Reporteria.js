@@ -14,13 +14,8 @@ const Reporteria = () => {
     }
   };
 
-  const handleEdit = async (id) => {
-    try {
-      const response = await axios.get(`http://localhost:5000/api/form/${id}`);
-      setEditedData({ id: response.data.id, data: response.data.data });
-    } catch (error) {
-      console.error('Error fetching data for editing:', error);
-    }
+  const handleEdit = (id, currentData) => {
+    setEditedData({ id, data: currentData });
   };
 
   const handleUpdate = async () => {
@@ -52,28 +47,40 @@ const Reporteria = () => {
     return () => clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
   }, []);
 
-
   return (
-    <div>
-      <h2>Reporteria</h2>
-      <ul>
-        {formData.map((item) => (
-          <li key={item.id}>
-            {item.data}
-            <button onClick={() => handleEdit(item.id)}>Editar</button>
-            <button onClick={() => handleDelete(item.id)}>Eliminar</button>
-          </li>
-        ))}
-      </ul>
-      {editedData.id && (
-        <div>
-          <input
-            type="text"
-            value={editedData.data}
-            onChange={(e) => setEditedData({ ...editedData, data: e.target.value })}
-          />
-          <button onClick={handleUpdate}>Actualizar</button>
-        </div>
+    <div className="container mt-4">
+      <h2 className="mb-4">Reporteria</h2>
+      {formData.length === 0 ? (
+        <p>No hay datos disponibles.</p>
+      ) : (
+        <ul className="list-group">
+          {formData.map((item) => (
+            <li key={item.id} className="list-group-item" onClick={() => handleEdit(item.id, item.data)}>
+              {editedData.id === item.id ? (
+                <div className="input-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={editedData.data}
+                    onChange={(e) => setEditedData({ ...editedData, data: e.target.value })}
+                  />
+                  <div className="input-group-append">
+                    <button className="btn btn-outline-success" onClick={handleUpdate}>
+                      Actualizar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="d-flex justify-content-between align-items-center">
+                  <span>{item.data}</span>
+                  <button className="btn btn-outline-danger" onClick={() => handleDelete(item.id)}>
+                    Eliminar
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

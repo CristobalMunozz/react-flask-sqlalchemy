@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function App() {
   const [formData, setFormData] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -10,21 +11,38 @@ function App() {
     try {
       await axios.post('http://localhost:5000/api/form', { data: formData });
       console.log('Data submitted successfully!');
+      setShowAlert(true); // Mostrar la alerta después de enviar exitosamente
     } catch (error) {
       console.error('Error submitting data:', error);
     }
   };
 
+  const handleAlertClose = () => {
+    setShowAlert(false); // Ocultar la alerta al cerrarla
+  };
+
   return (
-    <div className="App">
+    <div className="App container">
       <h1>Formulario Ejemplo</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Data:
-          <input type="text" value={formData} onChange={(e) => setFormData(e.target.value)} />
-        </label>
-        <button type="submit">Submit</button>
+        <input
+          type="text"
+          placeholder='ingrese un dato'
+          value={formData}
+          onChange={(e) => setFormData(e.target.value)}
+          required
+        />
+        <button className='btn btn-outline-primary' type="submit">Enviar</button>
       </form>
+
+      {showAlert && (
+  <div className="alert alert-success mt-3 d-flex" role="alert">
+    <div>Dato enviado exitosamente!</div>
+    <button type="button" className="close btn btn-danger ml-auto" aria-label="Close" onClick={handleAlertClose}>
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+      )}
     </div>
   );
 }
