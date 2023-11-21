@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import LoginForm from './LoginForm'; // Importa el nuevo componente
 
 function App() {
   const [formData, setFormData] = useState('');
@@ -24,6 +25,7 @@ function App() {
   return (
     <div className="App container">
       <h1>Formulario Ejemplo</h1>
+      <LoginForm /> {/* Usa el nuevo componente de login */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
